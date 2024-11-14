@@ -1,181 +1,297 @@
 import React, { useState, useEffect } from 'react';
-import Editor from '@monaco-editor/react';
 import axios from 'axios';
-import Question from './Question';
-import { questions } from './questions';
-
-const initialFiles = {
-  'script.js': {
-    name: 'script.js',
-    language: 'javascript',
-    value: `console.log('Hello from script.js');
-function press() { console.log('Button pressed'); }`,
-  },
-  'style.css': {
-    name: 'style.css',
-    language: 'css',
-    value: `body { font-family: Arial, sans-serif; color: #333; }`,
-  },
-  'index.html': {
-    name: 'index.html',
-    language: 'html',
-    value: `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Login Form</h1>
-  <button onclick="press()">Press here</button>
-  <script src="script.js"></script>
-</body>
-</html>`,
-  },
+import { BrowserRouter as Router, Route, Routes, useNavigate, Link } from 'react-router-dom';
+import HomePage from './HomePage';
+import ResourceReqPage from './ResourceReqPage';
+import TestPage from './TestPage';
+// Components for registration, login, and forum
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginRegister />} />
+        <Route path="/home" element={<Home />} /> {/* Add this route */}
+        <Route path="/forum" element={<Forum />} />
+        <Route path="/challenges" element={<HomePage />} />
+        <Route path="/resource/:taskId" element={<ResourceReqPage />} />
+        <Route path="/test/:taskId" element={<TestPage />} />
+      </Routes>
+    </Router>
+  );
 };
 
-function App() {
-  const [files, setFiles] = useState(initialFiles);
-  const [fileName, setFileName] = useState('index.html');
-  const [html, setHtml] = useState(initialFiles['index.html'].value);
-  const [css, setCss] = useState(initialFiles['style.css'].value);
-  const [js, setJs] = useState(initialFiles['script.js'].value);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(null);
+const LoginRegister = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Use navigate hook instead of history
 
-  const selectedQuestion = questions[currentQuestionIndex];
-  const file = files[fileName];
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleEditorChange = (value) => {
-    setFiles(prevFiles => ({
-      ...prevFiles,
-      [fileName]: {
-        ...prevFiles[fileName],
-        value,
-      },
-    }));
-    if (fileName === 'index.html') setHtml(value);
-    if (fileName === 'style.css') setCss(value);
-    if (fileName === 'script.js') setJs(value);
-  };
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
 
-  // Run test and calculate score
-  const completeTest = async () => {
-    const response = await axios.post('http://localhost:3000/run-test', {
-      html,
-      css,
-      js,
-      validationScript: selectedQuestion.validationScript.toString(),
-    });
-    
-    // Set score based on response message
-    const testMessage = response.data.message;
-    const scoreMatch = testMessage.match(/(\d+)\s+points/);
-    if (scoreMatch) {
-      setScore(parseInt(scoreMatch[1], 10)); // Update score
-    } else {
-      setScore(0); // In case there's an error with the score
-    }
-
-    alert(testMessage); // Display message
-  };
-
-  // Submit test
-  const submitTest = async () => {
-    alert("Test Submitted! Please check the results for feedback.");
-    // Implement the submit action (e.g., sending the code for final evaluation).
-  };
-
-  const nextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      resetFilesForNextQuestion();
-    } else {
-      alert('No more questions!');
+    try {
+      const response = await axios.post('http://localhost:5000/register', { username, email, password });
+      if (response.status === 201) {
+        setMessage('User registered successfully!');
+        setUsername('');
+        setEmail('');
+        setPassword('');
+      }
+    } catch (error) {
+      setMessage('Error registering user. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const resetFilesForNextQuestion = () => {
-    setFiles(initialFiles);
-    setHtml(initialFiles['index.html'].value);
-    setCss(initialFiles['style.css'].value);
-    setJs(initialFiles['script.js'].value);
-  };
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
 
-  useEffect(() => {
-    updatePreview();
-  }, [html, css, js]);
-
-  const updatePreview = () => {
-    const previewDiv = document.getElementById('preview-div');
-    previewDiv.innerHTML = '';
-    const iframe = document.createElement('iframe');
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = 'none';
-    previewDiv.appendChild(iframe);
-
-    const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDocument.open();
-    iframeDocument.write(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>${css}</style>
-      </head>
-      <body>
-        ${html}
-        <script>${js}</script>
-      </body>
-      </html>
-    `);
-    iframeDocument.close();
+    try {
+      const response = await axios.post('http://localhost:5000/login', { username, password });
+      if (response.status === 200) {
+        setMessage('Login successful!');
+        localStorage.setItem('token', response.data.token); // Save the token
+        navigate('/home'); // Redirect to the new home page
+      }
+    } catch (error) {
+      setMessage('Error logging in. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ display: 'flex', width: '1500px' }}>
-      <div style={{ width: '200px', padding: '10px' }}>
-        <button disabled={fileName === 'index.html'} onClick={() => {
-          setFileName('index.html');
-          setHtml(files['index.html'].value);
-        }}>
-          index.html
-        </button>
-        <button disabled={fileName === 'style.css'} onClick={() => {
-          setFileName('style.css');
-          setCss(files['style.css'].value);
-        }}>
-          style.css
-        </button>
-        <button disabled={fileName === 'script.js'} onClick={() => {
-          setFileName('script.js');
-          setJs(files['script.js'].value);
-        }}>
-          script.js
-        </button>
-      </div>
-      <div style={{ flex: 1 }}>
-        <Question problem={selectedQuestion.problem} />
-        <Editor
-          height="70vh"
-          theme="vs-dark"
-          language={file.language}
-          value={file.value}
-          onChange={handleEditorChange}
-        />
-      </div>
-      <div id="preview-div" style={{ flex: 1, border: '1px solid #ccc', marginLeft: '10px', height: '80vh', overflow: 'auto' }} />
-      <div>
-        <button onClick={completeTest}>Complete Test</button>
-        <button onClick={submitTest} style={{ marginLeft: '10px' }}>Submit Test</button>
-        <button onClick={nextQuestion} style={{ marginLeft: '10px' }}>Next Question</button>
-      </div>
-      {score !== null && <div>Score: {score}</div>} {/* Display score */}
+    <div style={styles.container}>
+      <h1>{isRegistering ? 'Registration Form' : 'Login Form'}</h1>
+      {isRegistering ? (
+        <form onSubmit={handleRegisterSubmit} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={handleUsernameChange}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={handleEmailChange}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? 'Registering...' : 'Register'}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={handleLoginSubmit} style={styles.form}>
+          <div style={styles.inputGroup}>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={handleUsernameChange}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+              style={styles.input}
+            />
+          </div>
+          <button type="submit" style={styles.button} disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+      )}
+
+      {message && <p style={styles.message}>{message}</p>}
+
+      <button onClick={() => setIsRegistering(!isRegistering)} style={styles.toggleButton}>
+        {isRegistering ? 'Switch to Login' : 'Switch to Register'}
+      </button>
     </div>
   );
-}
+};
+
+
+
+
+const Forum = () => {
+  const [posts, setPosts] = useState([]);
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:5000/posts', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    if (!message) return;
+
+    try {
+      const response = await axios.post('http://localhost:5000/post', { message }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      if (response.status === 201) {
+        setMessage('');
+        fetchPosts(); // Refresh posts after posting
+      }
+    } catch (error) {
+      console.error('Error posting message', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  return (
+    <div style={styles.container}>
+      <h1>Forum</h1>
+      <form onSubmit={handlePostSubmit} style={styles.form}>
+        <div style={styles.inputGroup}>
+          <textarea placeholder="Write something..." value={message} onChange={(e) => setMessage(e.target.value)} style={styles.input} />
+        </div>
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? 'Posting...' : 'Post'}
+        </button>
+      </form>
+
+      <div style={styles.postsContainer}>
+        {posts.map((post, index) => (
+          <div key={post.id || index} style={styles.post}>
+            <p><strong>{post.username}</strong>: {post.message}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Home = () => {
+  return (
+    <div style={styles.container}>
+      <h1>Select a Task</h1>
+      <Link to="/forum">
+        <button style={styles.button}>Forum</button>
+      </Link>
+      <Link to="/challenges">
+        <button style={styles.button}>Challenges</button>
+      </Link>
+    </div>
+  );
+};
+
+const styles = {
+  container: {
+    width: '300px',
+    margin: '0 auto',
+    padding: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    textAlign: 'center',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  inputGroup: {
+    marginBottom: '10px',
+  },
+  input: {
+    padding: '10px',
+    fontSize: '14px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+    width: '100%',
+  },
+  button: {
+    padding: '10px',
+    backgroundColor: '#4CAF50',
+    color: 'white',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: '10px',
+  },
+  message: {
+    color: 'green',
+    marginTop: '10px',
+  },
+  toggleButton: {
+    marginTop: '10px',
+    backgroundColor: '#f44336',
+    color: 'white',
+    border: 'none',
+    padding: '10px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  postsContainer: {
+    marginTop: '20px',
+  },
+  post: {
+    backgroundColor: '#f1f1f1',
+    padding: '10px',
+    borderRadius: '5px',
+    marginBottom: '10px',
+    textAlign: 'left',
+  },
+};
 
 export default App;
