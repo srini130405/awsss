@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid'); // Import the uuid library
 
 AWS.config.update({
-  accessKeyId: 'AKIAVY2PHDJFNQWD2MLE',
-  secretAccessKey: '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',
+  accessKeyId: '',
+  secretAccessKey: '',
   region: 'us-east-1',
 });
 

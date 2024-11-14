@@ -4,8 +4,8 @@ const { Readable } = require('stream');
 
 // Initialize AWS SDK with hardcoded credentials
 AWS.config.update({
-  accessKeyId: 'AKIAVY2PHDJFNQWD2MLE',
-  secretAccessKey: '0u+cSoVM9xqhgX/Fz2ipjplSjSn+mXDCfjt3dBKD',
+  accessKeyId: '',
+  secretAccessKey: '',
   region: 'us-east-1'  // Example: 'us-west-2'
 });
 
