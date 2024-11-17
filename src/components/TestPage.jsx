@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import axios from 'axios';
 import Question from './Question';
-import { questions } from './questions';
-import { useParams } from 'react-router-dom';
-import { getuser } from './secret.cjs';
-
+import { questions } from '../questions';
+import { useNavigate,useParams } from 'react-router-dom';
+import { getuser } from '../secret.cjs';
+import cors from 'cors';
 
 
 function TestPage() {
   const { taskId } = useParams();
+  const navigate = useNavigate();
   const [files, setFiles] = useState({
     'script.js': {
       name: 'script.js',
@@ -45,7 +46,6 @@ function TestPage() {
   const [js, setJs] = useState(files['script.js'].value);
   const [score, setScore] = useState(null);
 
-  // Get the question based on the taskId
   const questionIndex = parseInt(taskId, 10) - 1;
   const selectedQuestion = questions[questionIndex];
 
@@ -62,50 +62,47 @@ function TestPage() {
     if (fileName === 'script.js') setJs(value);
   };
 
-  // Run test and calculate score
   const completeTest = async () => {
-    const response = await axios.post('http://localhost:5000/run-test', {
-      html,
-      css,
-      js,
-      validationScript: selectedQuestion.validationScript.toString(),
-    });
-    
-    const testMessage = response.data.message;
-    const scoreMatch = testMessage.match(/(\d+)\s+points/);
-    const fsc=scoreMatch[1];
-    if (scoreMatch) {
-      setScore(parseInt(scoreMatch[1], 10));
-    } else {
-      setScore(0);
-    }
+    try {
+      const user_id = getuser();
+      const resourcesUsed = JSON.parse(localStorage.getItem('studyMaterials')) || [];
+      const ratings = JSON.parse(localStorage.getItem('ratings')) || [];
+      
+      // Send test data
+      const testResponse = await axios.post('http://localhost:5000/run-test', {
+        html,
+        css,
+        js,
+        validationScript: selectedQuestion.validationScript.toString(),
+      });
 
-    
-    const user_id=getuser();
-    // Retrieve resources used from local storage
-    const resourcesUsed = JSON.parse(localStorage.getItem('studyMaterials')) || [];
-    const ratings=JSON.parse(localStorage.getItem('ratings')) || [];
-    // Assuming user_id and ratings are known or collected elsewhere
+      const testMessage = testResponse.data.message;
+      const scoreMatch = testMessage.match(/(\d+)\s+points/);
+      const scores = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
+      setScore(scores);
 
-    console.log(resourcesUsed);
-    console.log(ratings)
-    console.log(fsc);
-    console.log(taskId);
-    console.log(user_id);
-    const resp =await axios.post('http://localhost:5000/submit-feedback',{
+      // Send feedback
+      await axios.post('http://localhost:5000/submit-feedback', {
         user_id,
-        taskId,
-        resourcesUsed,
-        fsc,
-        ratings
+        test_id: taskId,
+        resources_used: resourcesUsed,
+        scores,
+        ratings,
+      });
 
-    });
-    console.log(resp);
+      // Fetch recommendations
+      const url = `http://flask-example-env-1.eba-3k7ftnxz.us-east-1.elasticbeanstalk.com/?test_id=101`;
+      const fetchResponse = await fetch(url);
+      if (!fetchResponse.ok) throw new Error('Network response was not ok');
+      const recommendedData = await fetchResponse.json();
+
+      // Navigate to the result page with data
+      console.log(recommendedData,scores);
+      navigate('/results', { state: { recommendedData, scores } });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
-  
-  useEffect(() => {
-    updatePreview();
-  }, [html, css, js]);
 
   const updatePreview = () => {
     const previewDiv = document.getElementById('preview-div');
@@ -130,10 +127,14 @@ function TestPage() {
         ${html}
         <script>${js}</script>
       </body>
-      </html>
-    `);
+      </html>`
+    );
     iframeDocument.close();
   };
+
+  useEffect(() => {
+    updatePreview();
+  }, [html, css, js]);
 
   return (
     <div style={{ display: 'flex', width: '1500px' }}>

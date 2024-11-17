@@ -4,8 +4,8 @@ const { Readable } = require('stream');
 
 // Initialize AWS SDK with hardcoded credentials
 AWS.config.update({
-  accessKeyId: '',
-  secretAccessKey: '',
+  accessKeyId: 'AKIAVY2PHDJFNQWD2MLE',
+  secretAccessKey: '0u+cSoVM9xqhgX/Fz2ipjplSjSn+mXDCfjt3dBKD',
   region: 'us-east-1'  // Example: 'us-west-2'
 });
 
@@ -19,6 +19,7 @@ const CSV_FILE_KEY = 'dataset.csv';
 // Function to append data to CSV in S3
 const appendDataToCsv = async (user_id,test_id, resources_used, scores, ratings) => {
   try {
+    console.log(test_id,resources_used,scores);
     // Get the existing CSV file from S3
     const response = await s3.getObject({ Bucket: BUCKET_NAME, Key: CSV_FILE_KEY }).promise();
     const csvContent = response.Body.toString('utf-8');
@@ -58,7 +59,7 @@ const appendDataToCsv = async (user_id,test_id, resources_used, scores, ratings)
 // Function to handle feedback submission
 const submitFeedback = async (req, res) => {
   const { user_id,test_id, resources_used, scores, ratings } = req.body;
-
+  
   try {
     // Call the function to append data to S3 CSV
     const result = await appendDataToCsv(user_id,test_id, resources_used, scores, ratings);

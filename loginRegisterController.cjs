@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 
 // Initialize AWS SDK
 AWS.config.update({
-  accessKeyId: '',
-  secretAccessKey: '',
+  accessKeyId: 'AKIAVY2PHDJFNQWD2MLE',
+  secretAccessKey: '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',
   region: 'us-east-1',
 });
 
