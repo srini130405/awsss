@@ -29,7 +29,7 @@ const Home = () => {
       <Link to="/forum">
         <button style={styles.button}>Forum</button>
       </Link>
-      <Link to="/challenges">
+      <Link to="/chlg">
         <button style={styles.button}>Challenges</button>
       </Link>
     </div>

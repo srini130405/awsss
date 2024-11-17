@@ -3,10 +3,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Import controller functions
-const { registerUser, loginUser } = require('./loginRegisterController.cjs');
-const { verifyToken, postMessage, getPosts } = require('./postController.cjs');
-const { runTest } = require('./puppeteerController.cjs');
-const { submitFeedback } = require('./feedbackController.cjs')
+const { registerUser, loginUser } = require('./controllers/loginRegisterController.cjs');
+const { verifyToken, postMessage, getPosts } = require('./controllers/postController.cjs');
+const { runTest } = require('./controllers/puppeteerController.cjs');
+const { submitFeedback } = require('./controllers/feedbackController.cjs')
 const app = express();
 const port = 5000;
 
