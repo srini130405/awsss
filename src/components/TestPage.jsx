@@ -6,7 +6,7 @@ import { questions } from '../questions';
 import { useNavigate,useParams } from 'react-router-dom';
 import { getuser } from '../secret.cjs';
 import cors from 'cors';
-
+import './smthn.css';
 
 function TestPage() {
   const { taskId } = useParams();
@@ -20,7 +20,7 @@ function TestPage() {
     'style.css': {
       name: 'style.css',
       language: 'css',
-      value: `body { font-family: Arial, sans-serif; color: #333; }`,
+      value: `body { font-family: Arial, sans-serif; color: black;background-color: white }`,
     },
     'index.html': {
       name: 'index.html',
@@ -82,7 +82,7 @@ function TestPage() {
       setScore(scores);
 
       // Send feedback
-      await axios.post('http://localhost:5000/submit-feedback', {
+      await axios.post('http://localhost:6000/submit-feedback', {
         user_id,
         test_id: taskId,
         resources_used: resourcesUsed,
@@ -137,6 +137,7 @@ function TestPage() {
   }, [html, css, js]);
 
   return (
+    <div class="bddd">
     <div style={{ display: 'flex', width: '1500px' }}>
       <div style={{ width: '200px', padding: '10px' }}>
         <button disabled={fileName === 'index.html'} onClick={() => setFileName('index.html')}>
@@ -150,7 +151,7 @@ function TestPage() {
         </button>
       </div>
       <div style={{ flex: 1 }}>
-        <Question problem={selectedQuestion.problem} />
+        <Question problem={selectedQuestion.problem} class="dd"/>
         <Editor
           height="70vh"
           theme="vs-dark"
@@ -160,10 +161,12 @@ function TestPage() {
         />
       </div>
       <div id="preview-div" style={{ flex: 1, border: '1px solid #ccc', marginLeft: '10px', height: '80vh', overflow: 'auto' }} />
-      <div>
+      <br/>
+      <div style={{marginTop:'750px',marginRight:'100px'}}>
         <button onClick={completeTest}>Complete Test</button>
       </div>
       {score !== null && <div>Score: {score}</div>}
+    </div>
     </div>
   );
 }

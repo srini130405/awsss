@@ -1,37 +1,67 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './hm.css';
 
 const Home = () => {
-  const styles = {
-    container: {
-      width: '300px',
-      margin: '0 auto',
-      padding: '20px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
-      textAlign: 'center',
-    },
-    button: {
-      padding: '10px',
-      backgroundColor: '#4CAF50',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      marginTop: '10px',
-      width: '100%',
-    },
-  };
-
   return (
-    <div style={styles.container}>
-      <h1>Select a Task</h1>
+    <div class="bd">
+    <div class="grid-bg" >
+    <div class="navbar">
+   <div class="logo">
+    
+    <span>
+     Dev
+    </span>
+    Labs
+   </div>
+   <div class="nav-links">
+    <a href="#">
+     Challenges
+    </a>
+    <a class="active" href="#">
+     Forum
+    </a>
+    <a href="#">
+     Roadmap
+    </a>
+    <a href="#">
+     Profile
+    </a>
+   </div>
+  
+  </div>
+  <div class="main-content">
+    <div class="fade1 relative">
+      <div class="fade1-container">
+       <div class="lmao"> 
+   <div class="lol" >
+    Welcome to&nbsp;
+    <span>
+     Devlabs&nbsp;
+    </span>
+    ,&nbsp;<br/>Happy learning.
+   </div>
+   </div>
+   <div class="pp">
+    Codebase consists of a series of landing and support pages which companies can use to promote new products and business launches.
+   </div>
+   </div>
+   </div>
+ 
+   <div class="buttons">
+    <div class="but">
       <Link to="/forum">
-        <button style={styles.button}>Forum</button>
-      </Link>
-      <Link to="/chlg">
-        <button style={styles.button}>Challenges</button>
-      </Link>
+    <a class="start-building" href="#">
+     Forum
+    </a></Link>
+    <Link to="/chlg">
+    <a class="start-building1" href="#">
+     Challenges
+    </a></Link>
+    </div>
+   </div>
+  </div>
+    </div>
     </div>
   );
 };

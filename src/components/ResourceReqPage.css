@@ -1,0 +1,96 @@
+/* Overlay styles */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(20px); /* Increased blur */
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly more opaque for extra darkness */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Popup styles */
+  .popup {
+    background: #0a0a0a; /* Darker black background */
+    color: #fff;
+    padding: 25px 35px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7); /* Stronger shadow */
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  /* Header text styling */
+  .popup h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #8e2de2, #f94a87); /* Purple-to-red gradient */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gradient text styling */
+    text-transform: uppercase; /* Optional: Capitalize text */
+  }
+  
+  /* Input field styles */
+  .popup input[type="text"],
+  .popup input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    background: #1a1a1a; /* Darker input background */
+    color: #fff;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+  }
+  
+  .popup input[type="text"]:focus,
+  .popup input[type="number"]:focus {
+    outline: none;
+    border-color: #0072ff; /* Vibrant border on focus */
+    box-shadow: 0 0 5px #0072ff;
+  }
+  
+  /* Button styles */
+  .popup button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    font-weight: bold;
+    transition: all 0.4s ease;
+  }
+  
+  /* Add Link button */
+  .popup .add-button {
+    background: linear-gradient(to right, #444cf7, #3a8dff); /* Darker blue gradient */
+    color: #fff;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(58, 141, 255, 0.3); /* Subtle shadow */
+  }
+  
+  .popup .add-button:hover {
+    transform: scale(1.05); /* Slight grow on hover */
+    box-shadow: 0 6px 12px rgba(58, 141, 255, 0.5); /* Enhanced shadow on hover */
+  }
+  
+  /* Submit button */
+  .popup .submit-button {
+    background: linear-gradient(to right, #3f51b5, #5c6bc0); /* Deep indigo gradient */
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(63, 81, 181, 0.3); /* Subtle shadow */
+  }
+  
+  .popup .submit-button:hover {
+    transform: scale(1.05); /* Slight grow on hover */
+    box-shadow: 0 6px 12px rgba(63, 81, 181, 0.5); /* Enhanced shadow on hover */
+  }

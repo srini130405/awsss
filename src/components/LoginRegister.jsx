@@ -17,7 +17,7 @@ const LoginRegister = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5000/register", {
+      const response = await axios.post("http://localhost:6000/register", {
         username,
         email,
         password,
@@ -39,7 +39,7 @@ const LoginRegister = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post("http://localhost:6000/login", {
         username,
         password,
       });
@@ -76,9 +76,16 @@ const LoginRegister = () => {
       backdropFilter: "blur(10px)",
       textAlign: "center",
     },
+    lpad:{
+      width:'1000px',
+      height:'1000px',
+      backgroundColor:"#070d36",
+    },
     heading: {
       fontSize: "1.5rem",
       marginBottom: "20px",
+      marginRight:"10px",
+      fontWeight:"bold",
     },
     form: {
       display: "flex",
@@ -131,10 +138,11 @@ const LoginRegister = () => {
     },
   };
   return (
+    <div class="lpad">
     <div style={styles.container}>
-      <h1 style={styles.heading}>
+      <div style={styles.heading}>
         {isRegistering ? "Registration Form" : "Login Form"}
-      </h1>
+      </div>
       <form
         onSubmit={isRegistering ? handleRegisterSubmit : handleLoginSubmit}
         style={styles.form}
@@ -216,6 +224,7 @@ const LoginRegister = () => {
       >
         {isRegistering ? "Switch to Login" : "Switch to Register"}
       </button>
+    </div>
     </div>
   );
 };

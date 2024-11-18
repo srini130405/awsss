@@ -5,7 +5,7 @@ import './hompg.css';
 
 function HomePage() {
   return (
-    <>
+    <div class="bdd">
   <div class="whole">
   <div class="container">
    <div class="content">
@@ -13,18 +13,18 @@ function HomePage() {
      Learn HTML &amp; CSS
     </h1>
     <div class="details">
-     5 hours of content • 15 lessons
+     1 hours of content • 3 lessons
     </div>
     <div class="progress-bar">
      <div class="progress-text">
-      Progress: 10/20
+      Progress: 0/2
      </div>
      <div class="progress">
       <div class="progress-fill">
       </div>
-     </div>
+     </div>&nbsp;
      <div class="progress-percentage">
-      50%
+      0%
      </div>
     </div>
     <div class="section">
@@ -86,7 +86,7 @@ function HomePage() {
    </div>
   </div>
   </div>
-  </>
+  </div>
   );
 }
 

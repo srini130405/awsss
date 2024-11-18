@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import './ResourceReqPage.css'; // Import updated CSS for styling
 
 function ResourceReqPage() {
   const { taskId } = useParams();
@@ -27,31 +28,32 @@ function ResourceReqPage() {
   };
 
   return (
-    <div>
-      <h2>Optional: Add Study Material Links and Ratings</h2>
-      <input
-        type="text"
-        placeholder="Enter link"
-        value={inputLink}
-        onChange={(e) => setInputLink(e.target.value)}
-      />
-      <input
-        type="number"
-        placeholder="Enter rating"
-        value={inputRating}
-        onChange={(e) => setInputRating(e.target.value)}
-      />
-      <button onClick={addLink}>Add Link and Rating</button>
-
-      <ul>
-        {links.map((link, index) => (
-          <li key={index}>
-            {link} - Rating: {ratings[index]}
-          </li>
-        ))}
-      </ul>
-
-      <button onClick={handleSubmit}>Submit and Start Test</button>
+    <div class="card">
+      <div class="card-info">
+    <div className="overlay">
+      <div className="popup">
+        <h2>Optional: Add Study Material Links and Ratings</h2>
+        <input
+          type="text"
+          placeholder="Enter link"
+          value={inputLink}
+          onChange={(e) => setInputLink(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Enter rating"
+          value={inputRating}
+          onChange={(e) => setInputRating(e.target.value)}
+        />
+        <button className="add-button" onClick={addLink}>
+          Add Link and Rating
+        </button>
+        <button className="submit-button" onClick={handleSubmit}>
+          Submit and Start Test
+        </button>
+      </div>
+    </div>
+    </div>
     </div>
   );
 }

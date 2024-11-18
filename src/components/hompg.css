@@ -1,12 +1,13 @@
-body{margin: 0;
+.bdd{
+  margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #0f172a;
+    background-color: #070d36;
     color: #e2e8f0;
-    
+    width:100%;
     }
     .whole{
-      margin-left: 140px;
-      width:1500px;
+    max-width:1300px ;
+   
     }
     .container {
     padding: 20px;
@@ -16,7 +17,7 @@ body{margin: 0;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #1e293b;
+    background-color: #0c592a;
     }
     .header .logo {
     font-size: 24px;
@@ -62,7 +63,7 @@ body{margin: 0;
     overflow: hidden;
     }
     .progress-bar .progress .progress-fill {
-    width: 50%;
+    width: 0%;
     height: 100%;
     background-color: #fbbf24;
     }
@@ -80,8 +81,8 @@ body{margin: 0;
     margin-bottom: 20px;
     }
     .img1{
-      width:800px;
-      height:330px;
+      width: 400px;
+      height:250px;
       border-radius: 15px;
     }
      .exercise img {

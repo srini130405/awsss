@@ -1,0 +1,17 @@
+.bddd{
+   
+   background-color: #070d36;
+   height:100vh;
+}
+.dd{
+    color:white;
+}
+button{
+    background-color: black;
+    color:white;
+    height:40px;
+    width:80px;
+    border:none;
+    border-radius: 10px;
+    font-weight: bold;
+}
