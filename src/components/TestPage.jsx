@@ -82,7 +82,7 @@ function TestPage() {
       setScore(scores);
 
       // Send feedback
-      await axios.post('http://localhost:6000/submit-feedback', {
+      await axios.post('http://localhost:5000/submit-feedback', {
         user_id,
         test_id: taskId,
         resources_used: resourcesUsed,

@@ -7,7 +7,7 @@ const Forum = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:6000/posts", {
+      const response = await axios.get("http://localhost:5000/posts", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setPosts(response.data);
@@ -22,7 +22,7 @@ const Forum = () => {
     if (!message) return;
     try {
       const response = await axios.post(
-        "http://localhost:6000/post",
+        "http://localhost:5000/post",
         { message },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

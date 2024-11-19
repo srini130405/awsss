@@ -17,7 +17,7 @@ const LoginRegister = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:6000/register", {
+      const response = await axios.post("http://localhost:5000/register", {
         username,
         email,
         password,
@@ -39,7 +39,7 @@ const LoginRegister = () => {
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:6000/login", {
+      const response = await axios.post("http://localhost:5000/login", {
         username,
         password,
       });
